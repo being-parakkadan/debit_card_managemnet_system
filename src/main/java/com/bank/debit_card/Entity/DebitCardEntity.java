@@ -32,7 +32,6 @@ public class DebitCardEntity {
 
     private int atmTransactionLimit;
     private int posEcomTransactionLimit;
-    private int annaliya ;
 
 
     // ====Card Activation Section====
