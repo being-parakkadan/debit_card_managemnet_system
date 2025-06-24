@@ -75,7 +75,26 @@ public class DebitCardService {
 
         return "Card blocked successfully for reason: " + reason;
     }
+
+        // ==================== Card Activation Section ====================
+        public String activateCard(String cardNumber, String pin) {
+            DebitCardEntity card = debitCardRepository.findByCardNumber(cardNumber)
+                    .orElseThrow(() -> new RuntimeException("Card not found."));
+
+            if (!pin.matches("\\d{4}")) {
+                return "PIN must be exactly 4 digits.";
+            }
+
+            card.setPin(pin);
+            card.setStatus("Active");
+            card.setActivationDate(Instant.now());
+
+            debitCardRepository.save(card);
+
+            return "Card activated successfully.";
+        }
 }
+
 
 
 
