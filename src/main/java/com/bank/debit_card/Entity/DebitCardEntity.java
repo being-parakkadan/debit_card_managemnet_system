@@ -10,7 +10,7 @@ import java.time.Instant;
 @Data // Generates Getters, Setters, toString, equals, hashCode
 @NoArgsConstructor // No-args constructor
 @AllArgsConstructor // All-args constructor
-public class DebitCard {
+public class DebitCardEntity {
 
     @Id
     private String id;
@@ -33,8 +33,13 @@ public class DebitCard {
     private int atmTransactionLimit;
     private int posEcomTransactionLimit;
 
+
+    // card activation Section
+    private Instant activationDate;
+
+
     // You can still add custom constructors or methods manually if needed
-    public DebitCard(String accountId, String cardNumber, String cvv, Instant expiryDate) {
+    public DebitCardEntity(String accountId, String cardNumber, String cvv, Instant expiryDate) {
         this.accountId = accountId;
         this.cardNumber = cardNumber;
         this.cvv = cvv;
