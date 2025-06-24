@@ -4,12 +4,13 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.Instant;
+
+import java.time.LocalDate;
 
 @Document(collection = "debit_cards")
-@Data // Generates Getters, Setters, toString, equals, hashCode
-@NoArgsConstructor // No-args constructor
-@AllArgsConstructor // All-args constructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DebitCardEntity {
 
     @Id
@@ -17,8 +18,10 @@ public class DebitCardEntity {
 
     private String accountId;
     private String cardNumber;
+    private String accountHolderName;
+    private String accountNumber;
     private String cvv;
-    private Instant expiryDate;
+    private LocalDate expiryDate;
     private String pin;
     private String status;
 
@@ -35,20 +38,23 @@ public class DebitCardEntity {
 
 
     // ====Card Activation Section====
-    private Instant activationDate;     // Timestamp when the card was activated
+    private LocalDate activationDate;
 
     // =====Card Block Section =====
-    private boolean isBlocked;         // true if blocked (manually or due to expiry)
-    private String blockReason;        // e.g. "Lost", "Stolen", "Expired", etc.
-    private Instant blockDate;         // Timestamp when the card was blocked
+    private boolean isBlocked;
+    private String blockReason;
+    private LocalDate blockDate;
 
 
     // You can still add custom constructors or methods manually if needed
-    public DebitCardEntity(String accountId, String cardNumber, String cvv, Instant expiryDate) {
+    public DebitCardEntity(String accountId, String accountNumber,String cardNumber, String accountHolderName, String cvv, LocalDate expiryDate, String pin) {
         this.accountId = accountId;
+        this.accountNumber = accountNumber;
         this.cardNumber = cardNumber;
+        this.accountHolderName = accountHolderName;
         this.cvv = cvv;
         this.expiryDate = expiryDate;
         this.status = "Inactive";
+        this.pin= null;
     }
 }

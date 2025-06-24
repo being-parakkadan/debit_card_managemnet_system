@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Random;
 
 @Service
 public class DebitCardService {
@@ -45,27 +47,25 @@ public class DebitCardService {
         DebitCardEntity card = debitCardRepository.findByCardNumber(cardNumber)
                 .orElseThrow(() -> new RuntimeException("Card not found with number: " + cardNumber));
 
-        Instant now = Instant.now();
+        LocalDate now = LocalDate.now();
+
+
+        // Check if card is already blocked
+        if (card.isBlocked()) {
+            return "Card is already blocked.";
+        }
 
         // Auto-block if expired
         if (card.getExpiryDate() != null && card.getExpiryDate().isBefore(now)) {
-            if (!card.isBlocked()) {
                 card.setBlocked(true);
                 card.setBlockReason("Expired");
                 card.setBlockDate(now);
                 card.setStatus("Blocked");
                 debitCardRepository.save(card);
                 return "Card is expired and has been automatically blocked.";
-            } else {
-                return "Card is already blocked and expired.";
             }
-        }
 
-        // Manual block with reason
-        if (card.isBlocked()) {
-            return "Card is already blocked.";
-        }
-
+        //Manual Block With reason
         card.setBlocked(true);
         card.setBlockReason(reason);
         card.setBlockDate(now);
@@ -76,23 +76,64 @@ public class DebitCardService {
         return "Card blocked successfully for reason: " + reason;
     }
 
-        // ==================== Card Activation Section ====================
-        public String activateCard(String cardNumber, String pin) {
-            DebitCardEntity card = debitCardRepository.findByCardNumber(cardNumber)
-                    .orElseThrow(() -> new RuntimeException("Card not found."));
+    // ==================== Card Activation Section ====================
+    public String activateCard(String cardNumber, String pin) {
+        DebitCardEntity card = debitCardRepository.findByCardNumber(cardNumber)
+                .orElseThrow(() -> new RuntimeException("Card not found."));
 
-            if (!pin.matches("\\d{4}")) {
-                return "PIN must be exactly 4 digits.";
-            }
-
-            card.setPin(pin);
-            card.setStatus("Active");
-            card.setActivationDate(Instant.now());
-
-            debitCardRepository.save(card);
-
-            return "Card activated successfully.";
+        if (!pin.matches("\\d{4}")) {
+            return "PIN must be exactly 4 digits.";
         }
+
+        card.setPin(pin);
+        card.setStatus("Active");
+        card.setActivationDate(LocalDate.now());
+
+        debitCardRepository.save(card);
+
+        return "Card activated successfully.";
+        }
+
+        //========================Card Generation Section ======================
+
+    public DebitCardEntity generateDebitCard(String accountId, String accountNumber, String accountHolderName){
+        String cardNumber = generateUniqueCardNumber();
+        String cvv = generateRandomCVV();
+        LocalDate expiryDate = LocalDate.now().plusYears(8);
+
+        DebitCardEntity newCard = new DebitCardEntity(accountId, accountNumber, cardNumber, accountHolderName, cvv, expiryDate, null);
+        newCard.setPin(null);
+        newCard.setStatus("Inactive");
+
+        return debitCardRepository.save(newCard);
+    }
+
+    // To Check Card number is Unique
+
+    private String generateUniqueCardNumber(){
+        String cardNumber;
+        do{
+            cardNumber = generateRandomCardNumber();
+        }while (debitCardRepository.findByCardNumber(cardNumber).isPresent());
+        return cardNumber;
+    }
+
+    private String generateRandomCardNumber(){
+        Random random =new Random();
+        StringBuilder cardNumber = new StringBuilder();
+        for (int i =0; i < 16; i++){
+            cardNumber.append(random.nextInt(10));
+        }
+        return cardNumber.toString();
+    }
+
+    private String generateRandomCVV() {
+        Random random = new Random();
+        int cvv = 100 + random.nextInt(900); // Ensures CVV is always 3 digits
+        return String.valueOf(cvv);
+    }
+
+
 }
 
 
