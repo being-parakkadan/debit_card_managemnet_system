@@ -34,8 +34,13 @@ public class DebitCardEntity {
     private int posEcomTransactionLimit;
 
 
-    // card activation Section
-    private Instant activationDate;
+    // ====Card Activation Section====
+    private Instant activationDate;     // Timestamp when the card was activated
+
+    // =====Card Block Section =====
+    private boolean isBlocked;         // true if blocked (manually or due to expiry)
+    private String blockReason;        // e.g. "Lost", "Stolen", "Expired", etc.
+    private Instant blockDate;         // Timestamp when the card was blocked
 
 
     // You can still add custom constructors or methods manually if needed
