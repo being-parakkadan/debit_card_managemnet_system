@@ -1,10 +1,15 @@
 package com.bank.debit_card.Entity;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDate;
 
 @Document(collection = "debit_cards")
+@Data // Generates Getters, Setters, toString, equals, hashCode
+@NoArgsConstructor // No-args constructor
+@AllArgsConstructor // All-args constructor
 public class Debit_Card {
 
     @Id
@@ -17,33 +22,23 @@ public class Debit_Card {
     private String pin;
     private String status;
 
-    // Empty constructor (needed by Spring)
-    public Debit_Card() {}
+    // ===== Card Usage Section (Jerald) =====
+    private boolean domesticUsage;
+    private boolean internationalUsage;
+    private boolean atmEnabled;
+    private boolean posEnabled;
+    private boolean ecomEnabled;
+    private boolean nfcEnabled;
 
-    // Constructor to create a new debit card quickly
+    private int atmTransactionLimit;
+    private int posEcomTransactionLimit;
+
+    // You can still add custom constructors or methods manually if needed
     public Debit_Card(String accountId, String cardNumber, String cvv, LocalDate expiryDate) {
         this.accountId = accountId;
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.expiryDate = expiryDate;
-        this.status = "Inactive"; // Default status when card is created
+        this.status = "Inactive";
     }
-
-    // Getters
-    public String getId() { return id; }
-    public String getAccountId() { return accountId; }
-    public String getCardNumber() { return cardNumber; }
-    public String getCvv() { return cvv; }
-    public LocalDate getExpiryDate() { return expiryDate; }
-    public String getPin() { return pin; }
-    public String getStatus() { return status; }
-
-    // Setters
-    public void setId(String id) { this.id = id; }
-    public void setAccountId(String accountId) { this.accountId = accountId; }
-    public void setCardNumber(String cardNumber) { this.cardNumber = cardNumber; }
-    public void setCvv(String cvv) { this.cvv = cvv; }
-    public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
-    public void setPin(String pin) { this.pin = pin; }
-    public void setStatus(String status) { this.status = status; }
 }
