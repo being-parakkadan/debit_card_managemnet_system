@@ -5,6 +5,8 @@ import com.bank.debit_card.Repository.DebitCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 @Service
 public class DebitCardService {
 
@@ -12,7 +14,7 @@ public class DebitCardService {
     private DebitCardRepository debitCardRepository;
 
 
-    //card usage
+    //=====card usage========
 
     public DebitCardEntity getCardUsage(String cardId){
         return debitCardRepository.findById(cardId)
@@ -36,6 +38,44 @@ public class DebitCardService {
 
         return debitCardRepository.save(card);
     }
+
+    // ==================== Card Blocking Section ====================
+
+    public String blockCardByCardNumber(String cardNumber, String reason) {
+        DebitCardEntity card = debitCardRepository.findByCardNumber(cardNumber)
+                .orElseThrow(() -> new RuntimeException("Card not found with number: " + cardNumber));
+
+        Instant now = Instant.now();
+
+        // Auto-block if expired
+        if (card.getExpiryDate() != null && card.getExpiryDate().isBefore(now)) {
+            if (!card.isBlocked()) {
+                card.setBlocked(true);
+                card.setBlockReason("Expired");
+                card.setBlockDate(now);
+                card.setStatus("Blocked");
+                debitCardRepository.save(card);
+                return "Card is expired and has been automatically blocked.";
+            } else {
+                return "Card is already blocked and expired.";
+            }
+        }
+
+        // Manual block with reason
+        if (card.isBlocked()) {
+            return "Card is already blocked.";
+        }
+
+        card.setBlocked(true);
+        card.setBlockReason(reason);
+        card.setBlockDate(now);
+        card.setStatus("Blocked");
+
+        debitCardRepository.save(card);
+
+        return "Card blocked successfully for reason: " + reason;
+    }
 }
+
 
 
