@@ -27,7 +27,6 @@ public class DebitCardService {
         DebitCardEntity card = debitCardRepository.findById(cardId)
                 .orElseThrow(() -> new RuntimeException("Card not found with ID: " + cardId));
 
-        // Update only usage-related fields
         card.setDomesticUsage(updated.isDomesticUsage());
         card.setInternationalUsage(updated.isInternationalUsage());
         card.setAtmEnabled(updated.isAtmEnabled());
