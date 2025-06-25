@@ -16,12 +16,12 @@ public class DebitCardController {
     @Autowired
     private DebitCardService debitCardService;
 
-    @GetMapping("/{cardNumber}")
+    @GetMapping("/get_usage/{cardNumber}")
     public DebitCardEntity getCardUsage(@PathVariable String cardNumber){
         return debitCardService.getCardUsage(cardNumber);
     }
 
-    @PutMapping("/{cardNumber}")
+    @PutMapping("/update_usage/{cardNumber}")
     public DebitCardEntity updateCardUsage(@PathVariable String cardNumber,@RequestBody DebitCardEntity updatedUsage){
         return debitCardService.updateCardUsage(cardNumber,updatedUsage);
     }
