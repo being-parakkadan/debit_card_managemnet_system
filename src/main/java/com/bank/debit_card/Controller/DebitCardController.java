@@ -5,6 +5,8 @@ import com.bank.debit_card.Service.DebitCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/debit_card")
 public class DebitCardController {
@@ -25,5 +27,11 @@ public class DebitCardController {
     @PostMapping("/block")
     public String blockCard(@RequestParam String cardNumber,@RequestParam String reason){
         return debitCardService.blockCardByCardNumber(cardNumber, reason);
+    }
+
+    @PutMapping("/activate/{cardNumber}")
+    public String activateCard(@PathVariable String cardNumber, @RequestBody Map<String, String> body) {
+        String pin = body.get("pin");
+        return debitCardService.activateCard(cardNumber, pin);
     }
 }
