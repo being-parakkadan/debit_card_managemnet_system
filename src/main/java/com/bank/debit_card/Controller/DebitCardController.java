@@ -53,7 +53,7 @@ public class DebitCardController {
     }
 
     @GetMapping("/cards/{customerId}")
-    public List<DebitCardDto> getCardsByCustomerId(@RequestParam String customerId) {
+    public List<DebitCardDto> getCardsByCustomerId(@PathVariable String customerId) {
         return debitCardService.getCardsByCustomerId(customerId);
     }
 }

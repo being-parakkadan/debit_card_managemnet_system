@@ -103,6 +103,7 @@ public class DebitCardService {
         String cvv = generateRandomCVV();
         LocalDate expiryDate = LocalDate.now().plusYears(8);
 
+
         DebitCardEntity newCard = new DebitCardEntity(customerId,accountId, accountType, cardNumber, cvv, expiryDate, null);
         newCard.setPin(null);
         newCard.setStatus("Inactive");
