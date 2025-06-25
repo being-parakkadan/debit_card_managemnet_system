@@ -4,6 +4,8 @@ import com.bank.debit_card.Entity.DebitCardEntity;
 import com.bank.debit_card.Service.DebitCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+
 
 import java.util.Map;
 
@@ -35,4 +37,14 @@ public class DebitCardController {
         String pin = body.get("pin");
         return debitCardService.activateCard(cardNumber, pin);
     }
+
+    @PostMapping("/generate")
+    public ResponseEntity<String> generateCard(@RequestParam String customerId,
+                                               @RequestParam String accountId,
+                                               @RequestParam String accountType) {
+        debitCardService.generateDebitCard(customerId, accountId, accountType);
+        return ResponseEntity.ok("Debit card generated and saved successfully.");
+    }
+
+
 }

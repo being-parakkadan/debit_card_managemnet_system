@@ -5,7 +5,6 @@ import com.bank.debit_card.Repository.DebitCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Random;
 
@@ -18,14 +17,14 @@ public class DebitCardService {
 
     //=====card usage========
 
-    public DebitCardEntity getCardUsage(String cardId){
-        return debitCardRepository.findById(cardId)
-                .orElseThrow(()->new RuntimeException("Card not found with ID"));
+    public DebitCardEntity getCardUsage(String cardNumber){
+        return debitCardRepository.findById(cardNumber)
+                .orElseThrow(()->new RuntimeException("Card not found with Number"));
     }
 
-    public DebitCardEntity updateCardUsage(String cardId, DebitCardEntity updated) {
-        DebitCardEntity card = debitCardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Card not found with ID: " + cardId));
+    public DebitCardEntity updateCardUsage(String cardNumber, DebitCardEntity updated) {
+        DebitCardEntity card = debitCardRepository.findById(cardNumber)
+                .orElseThrow(() -> new RuntimeException("Card not found with Number: " + cardNumber));
 
         card.setDomesticUsage(updated.isDomesticUsage());
         card.setInternationalUsage(updated.isInternationalUsage());
@@ -95,16 +94,16 @@ public class DebitCardService {
 
         //========================Card Generation Section ======================
 
-    public DebitCardEntity generateDebitCard(String accountId, String accountNumber, String accountHolderName){
+    public void generateDebitCard(String customerId, String accountId, String accountType){
         String cardNumber = generateUniqueCardNumber();
         String cvv = generateRandomCVV();
         LocalDate expiryDate = LocalDate.now().plusYears(8);
 
-        DebitCardEntity newCard = new DebitCardEntity(accountId, accountNumber, cardNumber, accountHolderName, cvv, expiryDate, null);
+        DebitCardEntity newCard = new DebitCardEntity(customerId,accountId, accountType, cardNumber, cvv, expiryDate, null);
         newCard.setPin(null);
         newCard.setStatus("Inactive");
 
-        return debitCardRepository.save(newCard);
+        debitCardRepository.save(newCard);
     }
 
     // To Check Card number is Unique
@@ -132,7 +131,7 @@ public class DebitCardService {
         return String.valueOf(cvv);
     }
 
-
+   //===================Card Details View=================================
 }
 
 

@@ -16,10 +16,11 @@ public class DebitCardEntity {
     @Id
     private String id;
 
+    private String customerId;
     private String accountId;
+    private String accountType;
+
     private String cardNumber;
-    private String accountHolderName;
-    private String accountNumber;
     private String cvv;
     private LocalDate expiryDate;
     private String pin;
@@ -47,11 +48,11 @@ public class DebitCardEntity {
 
 
     // You can still add custom constructors or methods manually if needed
-    public DebitCardEntity(String accountId, String accountNumber,String cardNumber, String accountHolderName, String cvv, LocalDate expiryDate, String pin) {
+    public DebitCardEntity(String customerId, String accountId, String accountType, String cardNumber, String cvv, LocalDate expiryDate, String pin) {
+        this.customerId =   customerId;
         this.accountId = accountId;
-        this.accountNumber = accountNumber;
+        this.accountType = accountType;
         this.cardNumber = cardNumber;
-        this.accountHolderName = accountHolderName;
         this.cvv = cvv;
         this.expiryDate = expiryDate;
         this.status = "Inactive";
