@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/debit_card")
+@RequestMapping("/debit_card")
 public class DebitCardController {
 
     @Autowired
