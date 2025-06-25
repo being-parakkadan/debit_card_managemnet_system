@@ -1,5 +1,6 @@
 package com.bank.debit_card.Service;
 
+import com.bank.debit_card.DTO.DebitCardDto;
 import com.bank.debit_card.Entity.DebitCardEntity;
 import com.bank.debit_card.Repository.DebitCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Random;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 public class DebitCardService {
@@ -128,7 +131,7 @@ public class DebitCardService {
 
     private String generateRandomCVV() {
         Random random = new Random();
-        int cvv = 100 + random.nextInt(900); // Ensures CVV is always 3 digits
+        int cvv = 100 + random.nextInt(900);
         return String.valueOf(cvv);
     }
 
@@ -151,6 +154,19 @@ public class DebitCardService {
         return "PIN reset successfully.";
     }
 
+    //====================Card Details Section================================
+
+    public List<DebitCardDto> getCardsByCustomerId(String customerId) {
+        List<DebitCardEntity> cards = debitCardRepository.findByCustomerId(customerId);
+
+        return cards.stream()
+                .map(card -> new DebitCardDto(
+                        card.getCardNumber(),
+                        card.getCvv(),
+                        card.getExpiryDate()
+                ))
+                .collect(Collectors.toList());
+    }
 
 }
 

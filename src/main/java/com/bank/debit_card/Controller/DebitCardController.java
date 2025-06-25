@@ -1,13 +1,13 @@
 package com.bank.debit_card.Controller;
 
+import com.bank.debit_card.DTO.DebitCardDto;
 import com.bank.debit_card.Entity.DebitCardEntity;
 import com.bank.debit_card.Service.DebitCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import java.util.*;
 
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/debit_card")
@@ -16,14 +16,14 @@ public class DebitCardController {
     @Autowired
     private DebitCardService debitCardService;
 
-    @GetMapping("/{cardId}")
-    public DebitCardEntity getCardUsage(@PathVariable String cardId){
-        return debitCardService.getCardUsage(cardId);
+    @GetMapping("/{cardNumber}")
+    public DebitCardEntity getCardUsage(@PathVariable String cardNumber){
+        return debitCardService.getCardUsage(cardNumber);
     }
 
-    @PutMapping("/{cardId}")
-    public DebitCardEntity updateCardUsage(@PathVariable String cardId,@RequestBody DebitCardEntity updatedUsage){
-        return debitCardService.updateCardUsage(cardId,updatedUsage);
+    @PutMapping("/{cardNumber}")
+    public DebitCardEntity updateCardUsage(@PathVariable String cardNumber,@RequestBody DebitCardEntity updatedUsage){
+        return debitCardService.updateCardUsage(cardNumber,updatedUsage);
     }
 
     @PutMapping("/block/{cardNumber}")
@@ -52,4 +52,8 @@ public class DebitCardController {
         return debitCardService.resetPin(cardNumber, newPin);
     }
 
+    @GetMapping("/cards/{customerId}")
+    public List<DebitCardDto> getCardsByCustomerId(@RequestParam String customerId) {
+        return debitCardService.getCardsByCustomerId(customerId);
+    }
 }
