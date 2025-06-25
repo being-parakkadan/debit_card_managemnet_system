@@ -46,5 +46,10 @@ public class DebitCardController {
         return ResponseEntity.ok("Debit card generated and saved successfully.");
     }
 
+    @PutMapping("/reset-pin/{cardNumber}")
+    public String resetPin(@PathVariable String cardNumber, @RequestBody Map<String, String> body) {
+        String newPin = body.get("newPin");
+        return debitCardService.resetPin(cardNumber, newPin);
+    }
 
 }
