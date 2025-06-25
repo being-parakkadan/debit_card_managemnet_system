@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import java.util.*;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/debit_card")
 public class DebitCardController {
