@@ -24,8 +24,9 @@ public class DebitCardController {
         return debitCardService.updateCardUsage(cardId,updatedUsage);
     }
 
-    @PostMapping("/block")
-    public String blockCard(@RequestParam String cardNumber,@RequestParam String reason){
+    @PutMapping("/block/{cardNumber}")
+    public String blockCard(@PathVariable String cardNumber, @RequestBody Map<String, String> body) {
+        String reason = body.get("reason");
         return debitCardService.blockCardByCardNumber(cardNumber, reason);
     }
 
