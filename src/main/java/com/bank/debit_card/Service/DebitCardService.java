@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.Optional;
 
 @Service
 public class DebitCardService {
@@ -129,6 +130,25 @@ public class DebitCardService {
         Random random = new Random();
         int cvv = 100 + random.nextInt(900); // Ensures CVV is always 3 digits
         return String.valueOf(cvv);
+    }
+
+    //===================Pin Reset Section=================================
+    public String resetPin(String cardNumber, String newPin) {
+        Optional<DebitCardEntity> optionalCard = debitCardRepository.findByCardNumber(cardNumber);
+
+        if (optionalCard.isEmpty()) {
+            return "Card not found.";
+        }
+
+        if (!newPin.matches("\\d{4}")) {
+            return "New PIN must be exactly 4 digits.";
+        }
+
+        DebitCardEntity card = optionalCard.get();
+        card.setPin(newPin); // update pin
+        debitCardRepository.save(card);
+
+        return "PIN reset successfully.";
     }
 
 
