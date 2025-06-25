@@ -21,15 +21,16 @@ public class DebitCardService {
 
     //=====card usage========
 
-    public DebitCardEntity getCardUsage(String cardNumber){
-        return debitCardRepository.findById(cardNumber)
-                .orElseThrow(()->new RuntimeException("Card not found with Number"));
+    public DebitCardEntity getCardUsage(String cardNumber) {
+        return debitCardRepository.findByCardNumber(cardNumber)
+                .orElseThrow(() -> new RuntimeException("Card not found with Number: " + cardNumber));
     }
 
     public DebitCardEntity updateCardUsage(String cardNumber, DebitCardEntity updated) {
-        DebitCardEntity card = debitCardRepository.findById(cardNumber)
+        DebitCardEntity card = debitCardRepository.findByCardNumber(cardNumber)
                 .orElseThrow(() -> new RuntimeException("Card not found with Number: " + cardNumber));
 
+        // Update only the usage-related fields
         card.setDomesticUsage(updated.isDomesticUsage());
         card.setInternationalUsage(updated.isInternationalUsage());
         card.setAtmEnabled(updated.isAtmEnabled());

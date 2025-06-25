@@ -22,8 +22,8 @@ public class DebitCardController {
     }
 
     @PutMapping("/update_usage/{cardNumber}")
-    public DebitCardEntity updateCardUsage(@PathVariable String cardNumber,@RequestBody DebitCardEntity updatedUsage){
-        return debitCardService.updateCardUsage(cardNumber,updatedUsage);
+    public DebitCardEntity updateCardUsage(@PathVariable String cardNumber, @RequestBody DebitCardEntity updatedUsage){
+        return debitCardService.updateCardUsage(cardNumber, updatedUsage);
     }
 
     @PutMapping("/block/{cardNumber}")
