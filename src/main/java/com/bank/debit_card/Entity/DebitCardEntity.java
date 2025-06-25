@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
-@Document(collection = "debit_cards")
+@Document(collection = "debit_card")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
