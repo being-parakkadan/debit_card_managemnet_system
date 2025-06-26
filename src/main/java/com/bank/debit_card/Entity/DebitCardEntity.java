@@ -27,7 +27,7 @@ public class DebitCardEntity {
     private String pin;
     private String status;
 
-    // ===== Card Usage Section (Jerald) =====
+    // ===== Card Usage Section =====
     private boolean domesticUsage;
     private boolean internationalUsage;
     private boolean atmEnabled;

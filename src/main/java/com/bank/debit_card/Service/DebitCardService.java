@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
-import java.time.temporal.ChronoUnit;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Random;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -113,7 +114,11 @@ public class DebitCardService {
 
         String cardNumber = generateUniqueCardNumber();
         String cvv = generateRandomCVV();
-        Instant expiryDate = Instant.now().plus(3, ChronoUnit.YEARS);
+        Instant now = Instant.now();
+        ZonedDateTime zonedDateTime = now.atZone(ZoneOffset.UTC);
+        ZonedDateTime futureDate = zonedDateTime.plusYears(5);
+        Instant expiryDate = futureDate.toInstant();
+
 
 
         DebitCardEntity newCard = new DebitCardEntity(customerId,accountId, accountType, cardNumber, cvv, expiryDate, null);
@@ -170,6 +175,13 @@ public class DebitCardService {
     //====================Card Details Section================================
 
     public List<DebitCardDto> getCardsByCustomerId(String customerId) {
+        boolean customerExists = debitCardRepository.existsById(customerId);
+
+        if (!customerExists){
+            DebitCardDto messageDto = new DebitCardDto("N/A","N/A",null);
+            return List.of(messageDto);
+        }
+
         List<DebitCardEntity> cards = debitCardRepository.findByCustomerId(customerId);
 
         return cards.stream()
