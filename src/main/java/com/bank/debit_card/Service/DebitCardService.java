@@ -33,6 +33,11 @@ public class DebitCardService {
         DebitCardEntity card = debitCardRepository.findByCardNumber(cardNumber)
                 .orElseThrow(() -> new RuntimeException("Card not found with Number: " + cardNumber));
 
+        if (!"Active".equalsIgnoreCase(card.getStatus())) {
+            throw new RuntimeException("Card is not active. Usage settings cannot be updated.");
+        }
+
+
         // Update only the usage-related fields
         card.setDomesticUsage(updated.isDomesticUsage());
         card.setInternationalUsage(updated.isInternationalUsage());
@@ -72,6 +77,10 @@ public class DebitCardService {
             }
 
         //Manual Block With reason
+        if (!"Active".equalsIgnoreCase(card.getStatus())) {
+            return "Cannot block card manually. Card is not active.";
+        }
+
         card.setBlocked(true);
         card.setBlockReason(reason);
         card.setBlockDate(now);
@@ -161,11 +170,16 @@ public class DebitCardService {
             return "Card not found.";
         }
 
+        DebitCardEntity card = optionalCard.get();
+
+        if (!"Active".equalsIgnoreCase(card.getStatus())) {
+            return "Cannot reset PIN. Card is not active.";
+        }
+
         if (!newPin.matches("\\d{4}")) {
             return "New PIN must be exactly 4 digits.";
         }
 
-        DebitCardEntity card = optionalCard.get();
         card.setPin(newPin); // update pin
         debitCardRepository.save(card);
 
