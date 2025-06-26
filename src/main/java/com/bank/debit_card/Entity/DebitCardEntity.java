@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Document(collection = "debit_card")
@@ -22,7 +23,7 @@ public class DebitCardEntity {
 
     private String cardNumber;
     private String cvv;
-    private LocalDate expiryDate;
+    private Instant expiryDate;
     private String pin;
     private String status;
 
@@ -39,23 +40,23 @@ public class DebitCardEntity {
 
 
     // ====Card Activation Section====
-    private LocalDate activationDate;
+    private Instant activationDate;
 
     // =====Card Block Section =====
     private boolean isBlocked;
     private String blockReason;
-    private LocalDate blockDate;
+    private Instant blockDate;
 
 
     // You can still add custom constructors or methods manually if needed
-    public DebitCardEntity(String customerId, String accountId, String accountType, String cardNumber, String cvv, LocalDate expiryDate, String pin) {
-        this.customerId =   customerId;
+    public DebitCardEntity(String customerId, String accountId, String accountType, String cardNumber, String cvv, Instant expiryDate, String pin) {
+        this.customerId = customerId;
         this.accountId = accountId;
         this.accountType = accountType;
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.expiryDate = expiryDate;
         this.status = "Inactive";
-        this.pin= null;
+        this.pin = null;
     }
 }

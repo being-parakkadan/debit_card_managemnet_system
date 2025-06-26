@@ -6,6 +6,7 @@ import com.bank.debit_card.Repository.DebitCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Random;
 import java.util.Optional;
@@ -59,10 +60,10 @@ public class DebitCardService {
         }
 
         // Auto-block if expired
-        if (card.getExpiryDate() != null && card.getExpiryDate().isBefore(now)) {
+        if (card.getExpiryDate() != null && card.getExpiryDate().isBefore(Instant.from(now))) {
                 card.setBlocked(true);
                 card.setBlockReason("Expired");
-                card.setBlockDate(now);
+                card.setBlockDate(Instant.from(now));
                 card.setStatus("Blocked");
                 debitCardRepository.save(card);
                 return "Card is expired and has been automatically blocked.";
@@ -71,7 +72,7 @@ public class DebitCardService {
         //Manual Block With reason
         card.setBlocked(true);
         card.setBlockReason(reason);
-        card.setBlockDate(now);
+        card.setBlockDate(Instant.from(now));
         card.setStatus("Blocked");
 
         debitCardRepository.save(card);
@@ -90,7 +91,7 @@ public class DebitCardService {
 
         card.setPin(pin);
         card.setStatus("Active");
-        card.setActivationDate(LocalDate.now());
+        card.setActivationDate(Instant.from(LocalDate.now()));
 
         debitCardRepository.save(card);
 
@@ -105,13 +106,13 @@ public class DebitCardService {
                 debitCardRepository.findByCustomerIdAndAccountType(customerId, accountType);
 
         if (existingCard.isPresent()){
-            throw new IllegalStateException("A Debit Card Already Exists for this Customer and Account type")
+            throw new IllegalStateException("A Debit Card Already Exists for this Customer and Account type");
         }
 
 
         String cardNumber = generateUniqueCardNumber();
         String cvv = generateRandomCVV();
-        LocalDate expiryDate = LocalDate.now().plusYears(8);
+        Instant expiryDate = Instant.now().plusNanos(8);
 
 
         DebitCardEntity newCard = new DebitCardEntity(customerId,accountId, accountType, cardNumber, cvv, expiryDate, null);

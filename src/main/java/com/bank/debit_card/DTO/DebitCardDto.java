@@ -3,7 +3,8 @@ package com.bank.debit_card.DTO;
 
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.Instant;
+
 
 @Data
 @NoArgsConstructor
@@ -11,5 +12,5 @@ import java.time.LocalDate;
 public class DebitCardDto {
     private String cardNumber;
     private String cvv;
-    private LocalDate expiryDate;
+    private Instant expiryDate;
 }
