@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDate;
+
+import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class DebitCardService {
         DebitCardEntity card = debitCardRepository.findByCardNumber(cardNumber)
                 .orElseThrow(() -> new RuntimeException("Card not found with number: " + cardNumber));
 
-        LocalDate now = LocalDate.now();
+        Instant now = Instant.now();
 
 
         // Check if card is already blocked
@@ -60,10 +61,10 @@ public class DebitCardService {
         }
 
         // Auto-block if expired
-        if (card.getExpiryDate() != null && card.getExpiryDate().isBefore(Instant.from(now))) {
+        if (card.getExpiryDate() != null && card.getExpiryDate().isBefore(Instant.now())){
                 card.setBlocked(true);
                 card.setBlockReason("Expired");
-                card.setBlockDate(Instant.from(now));
+                card.setBlockDate(now);
                 card.setStatus("Blocked");
                 debitCardRepository.save(card);
                 return "Card is expired and has been automatically blocked.";
@@ -72,7 +73,7 @@ public class DebitCardService {
         //Manual Block With reason
         card.setBlocked(true);
         card.setBlockReason(reason);
-        card.setBlockDate(Instant.from(now));
+        card.setBlockDate(now);
         card.setStatus("Blocked");
 
         debitCardRepository.save(card);
@@ -91,7 +92,7 @@ public class DebitCardService {
 
         card.setPin(pin);
         card.setStatus("Active");
-        card.setActivationDate(Instant.from(LocalDate.now()));
+        card.setActivationDate(Instant.now());
 
         debitCardRepository.save(card);
 
@@ -112,7 +113,7 @@ public class DebitCardService {
 
         String cardNumber = generateUniqueCardNumber();
         String cvv = generateRandomCVV();
-        Instant expiryDate = Instant.now().plusNanos(8);
+        Instant expiryDate = Instant.now().plus(3, ChronoUnit.YEARS);
 
 
         DebitCardEntity newCard = new DebitCardEntity(customerId,accountId, accountType, cardNumber, cvv, expiryDate, null);
