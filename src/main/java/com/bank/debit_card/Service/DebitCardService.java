@@ -100,6 +100,15 @@ public class DebitCardService {
         //========================Card Generation Section ======================
 
     public void generateDebitCard(String customerId, String accountId, String accountType){
+        // Check if card already exists
+        Optional<DebitCardEntity> existingCard =
+                debitCardRepository.findByCustomerIdAndAccountType(customerId, accountType);
+
+        if (existingCard.isPresent()){
+            throw new IllegalStateException("A Debit Card Already Exists for this Customer and Account type")
+        }
+
+
         String cardNumber = generateUniqueCardNumber();
         String cvv = generateRandomCVV();
         LocalDate expiryDate = LocalDate.now().plusYears(8);

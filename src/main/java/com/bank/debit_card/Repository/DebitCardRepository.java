@@ -11,5 +11,6 @@ public interface DebitCardRepository extends MongoRepository<DebitCardEntity, St
 
     List<DebitCardEntity> findByCustomerId(String customerId);
 
+    Optional<DebitCardEntity> findByCustomerIdAndAccountType(String customerId, String accountType);
 }
 
