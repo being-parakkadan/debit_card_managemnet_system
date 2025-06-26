@@ -175,20 +175,18 @@ public class DebitCardService {
     //====================Card Details Section================================
 
     public List<DebitCardDto> getCardsByCustomerId(String customerId) {
-        boolean customerExists = debitCardRepository.existsById(customerId);
-
-        if (!customerExists){
-            DebitCardDto messageDto = new DebitCardDto("N/A","N/A",null);
-            return List.of(messageDto);
-        }
-
         List<DebitCardEntity> cards = debitCardRepository.findByCustomerId(customerId);
 
+        if(cards.isEmpty()){
+            DebitCardDto messageDto = new DebitCardDto("N/A","N/A",null, "N/A");
+            return List.of(messageDto);
+        }
         return cards.stream()
                 .map(card -> new DebitCardDto(
                         card.getCardNumber(),
                         card.getCvv(),
-                        card.getExpiryDate()
+                        card.getExpiryDate(),
+                        card.getAccountType()
                 ))
                 .collect(Collectors.toList());
     }

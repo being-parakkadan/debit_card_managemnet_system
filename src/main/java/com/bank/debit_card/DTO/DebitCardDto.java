@@ -13,4 +13,5 @@ public class DebitCardDto {
     private String cardNumber;
     private String cvv;
     private Instant expiryDate;
+    private String accountType;
 }
